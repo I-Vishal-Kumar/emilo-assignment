@@ -41,7 +41,13 @@ export class AuthController {
                 maxAge: 24 * 60 * 60 * 1000, // 1 day
             });
 
-            res.status(200).json({ success: true, msg: "Login successful" });
+            delete user.password;
+
+            res.status(200).json({
+                success: true,
+                data: user,
+                msg: "Login successful",
+            });
         } catch (err) {
             console.error("LOGIN ERROR:", err);
             res.status(500).json({
@@ -88,7 +94,11 @@ export class AuthController {
                 maxAge: 24 * 60 * 60 * 1000,
             });
 
-            res.status(201).json({ success: true, msg: "Signup successful" });
+            res.status(201).json({
+                success: true,
+                data: newUser,
+                msg: "Signup successful",
+            });
         } catch (err) {
             console.error("SIGNUP ERROR:", err);
             res.status(500).json({
