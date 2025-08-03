@@ -3,7 +3,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import axios from '../../_lib/axios';
 import type { AxiosError } from 'axios';
-import { UserRoles, type AxiosReturnType, type UserRoleType } from '../../types/user';
+import { UserRoles, type AxiosReturnType, type UserRoleType, type UserType } from '../../types/user';
 
 export const GettingStarted: React.FC = () => {
 
@@ -14,7 +14,7 @@ export const GettingStarted: React.FC = () => {
     const navigate = useNavigate();
 
     const mutation = useMutation({
-        mutationFn: async () => {
+        mutationFn: async (): Promise<AxiosReturnType<UserType>> => {
             if (!username || !password) {
                 throw new Error('Both fields are required');
             }
@@ -26,15 +26,23 @@ export const GettingStarted: React.FC = () => {
 
             return await axios.post(endpoint, payload);
         },
-        onSuccess: () => {
+        onSuccess: (data) => {
             if (role === UserRoles.REVIEWER) {
                 navigate('/review-claims');
 
             } else if (role === UserRoles.ADMIN) {
                 navigate('/claim-approval');
 
-            } else {
-                navigate('/post');
+            } else if (data.data.data?.role) {
+                if (data.data.data?.role === UserRoles.REVIEWER) {
+                    navigate('/review-claims');
+
+                } else if (data.data.data?.role === UserRoles.ADMIN) {
+                    navigate('/claim-approval');
+
+                } else {
+                    navigate('/post');
+                }
             }
         },
         onError: (err: AxiosError<AxiosReturnType>) => {
