@@ -18,7 +18,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new SocketIOServer(server, {
     cors: {
-        origin: "http://localhost:5173",
+        origin: "https://emilo-assignment.vercel.app",
         credentials: true,
     },
 });
@@ -36,7 +36,7 @@ app.use(cookieParser());
 
 app.use(
     cors({
-        origin: "http://localhost:5173",
+        origin: "https://emilo-assignment.vercel.app",
         credentials: true,
     })
 );
